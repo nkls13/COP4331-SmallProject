@@ -1,15 +1,14 @@
-let popup = document.getElementById("loginPage");
 
-let button = document.getElementById("loginButton");
+let popUp = document.getElementById("registerPage");
 
-let span = document.getElementById("closeButton");
+let registerButton = document.getElementById("registerButton");
 
-//when user clicks on login
-button.onclick = function() {
-    popup.style.display = "block";
+let closeButton = document.getElementById("closeButton");
+
+registerButton.onclick = function() {
+    popUp.style.display = "block";
 }
 
-//if the user clicks on X
-span.onclick = function() {
-    popup.style.display = "none";
+closeButton.onclick = function() {
+    popUp.style.display = "none";
 }
