@@ -1,60 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            text-align: center;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	    height: 100vh;
-            width: 100vw;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 30%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .button {
-            margin: 20px 0 0 0;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #28A745;
-            color: white;
-            width: 20%;
-        }
-    </style>
+	<title>COP 4331 LAMP Stack Demo</title>
+	<script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/code.js"></script>
+    <link href="css/styles.css" rel="stylesheet">	
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">	
 </head>
+
 <body>
-    <div class="container">
-        <h1>COP 4331 Customer Login</h1>
-        <input type="text" placeholder="Username" required>
-        <input type="password" placeholder="Password" required>
-        <button class="button">Register</button>
-    </div>
+
+<!-- Banner at top of Page -->
+<!-- More things will be added here like a logo and a git hub link -->
+<div id="HP-Banner">
+	<div id="title">
+		<h1>COP 4331 HomePage Demo</h1>
+	</div>
+</div>
+
+<!-- Login Box -->
+<div id="loginDiv">
+	<form action="">
+		<!-- Login Title  -->
+		<span id="inner-title">Welcome Back!</span>
+		<!-- Login input boxes -->
+		<div id="login-input">
+			<input type="text" id ="Username" placeholder="Username" required>
+		</div>
+		<div id="login-input">
+			<input type="password" id ="Password"  placeholder="Password" required>
+		</div>
+		<!-- Login Button -->
+		<button type="button" class="buttons" onclick="doLogin();"> Login </button>
+		<!-- Register link -->
+		<!-- Still need to setup a signup page, separate page with same attributes -->
+		<div id="register">
+			<p>No account? <a href="#" id="registerButton">Register</a></p>
+		</div>	
+		<span class="text" id="loginResult"></span>
+	</form>
+</div>
+
+<!-- SignUp Box -->
+<div id="registerPage" class="popper">
+	<div class="popup-content">
+		<!--&times is the X symbol-->
+		<span id="closeButton" class="close">&times;</span>
+		<h2>Register</h2>
+		<!--box for username and password input-->
+		<form action="">
+			<!--Filled out to SignUp to our application-->
+			<div id="login-input">
+				<input type="text" id ="firstName"  placeholder="First Name" required>
+			</div>
+			<div id="login-input">
+				<input type="text" id ="lastName"  placeholder="Last Name" required>
+			</div>
+			<div id="login-input">
+				<input type="text" id="Username" placeholder="Username" required>
+			</div>
+			<div id="login-input">
+				<input type="password" id ="Password"  placeholder="Password" required>
+			</div>
+		        <!-- Register Button -->
+			<button type="button" class="buttons" onclick="createAccount();"> Sign Up </button>
+			<span class="text" id="registerResult"></span>
+		</form>
+	</div>
+	<script src="js/function.js"></script>
+</div>
+
 </body>
-</html
+</html>
 
