@@ -13,26 +13,25 @@
 	} 
 	else
 	{   
-        //Like searches for Partial Matches?
-		//Eahc "?" represents it needed to be bind
-		// Use () to make it apply to the entire search
-		$stmt = $conn->prepare("SELECT ID, Name, Phone, Email FROM Contacts WHERE (Name LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND UserID=?");
+        // Like searches for Partial Matches
+		$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND UserId=?");
 		
-        //The % allows for different characters before or after the search
-		$contactName = "%" . $inData["name"] . "%";
-		//Im searching for Name, phone, and email using the search term contact name so I need to bind it 4 times.
-		
-		$stmt->bind_param("sssi", $contactName, $contactName, $contactName, $inData["userId"]);
+        // The % allows for different characters before or after the search term
+		$searchTerm = "%" . $inData["searchTerm"] . "%";
+
+		// Binding the search term for FirstName, LastName, Phone, and Email
+		$stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $inData["userId"]);
 		$stmt->execute();
 		
 		$result = $stmt->get_result();
 		
 		while($row = $result->fetch_assoc())
 		{	
-			//fetch results of sql query and store into array. Builds an array of associative arrays, where each is a JSOn object
+			// Fetch results of SQL query and store them into an array
 			$searchResults[] = [
 				"id" => $row["ID"],
-				"name" => $row["Name"],
+				"firstName" => $row["FirstName"],
+				"lastName" => $row["LastName"],
 				"phone" => $row["Phone"],
 				"email" => $row["Email"]
 			];
