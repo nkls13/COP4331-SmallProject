@@ -1,5 +1,4 @@
 const urlBase = 'http://cop4331.xyz/LAMPAPI';
-const urlBase = 'http://cop4331.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 1;
@@ -15,8 +14,7 @@ function doLogin()
 	
 	let login = document.getElementById("Username").value;
 	let password = document.getElementById("Password").value;
-	let login = document.getElementById("Username").value;
-	let password = document.getElementById("Password").value;
+
 //	var hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
