@@ -414,3 +414,21 @@ function searchContacts() {
     });
 }
 
+//wait for the full html to load
+document.addEventListener('DOMContentLoaded', function() {
+    //for formatting the phone number inputs
+    document.getElementById('phoneText').addEventListener('input', function (e) {
+		//only take numbers
+        let value = e.target.value.replace(/\D/g, ''); 
+		//seperate sections of the phone number
+        if (value.length > 3 && value.length <= 6) {
+            e.target.value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+        } else if (value.length > 6) {
+            e.target.value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+        } else if (value.length > 0) {
+            e.target.value = `(${value.slice(0, 3)}`;
+        } else {
+            e.target.value = value;
+        }
+    });
+});
