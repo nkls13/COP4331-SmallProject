@@ -269,11 +269,16 @@ function addContact() {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log("Contact has been added");
-                // Clear input fields in form 
-                document.getElementById("addMe").reset();
-                // reload contacts table and switch view to show
+                
+                // Clear input fields manually
+                document.getElementById("firstNameText").value = "";
+                document.getElementById("lastNameText").value = "";
+                document.getElementById("phoneText").value = "";
+                document.getElementById("emailText").value = "";
+
+                // Reload contacts table and close the modal
                 loadContacts();
-                showTable();
+                closeModal();
             }
         };
         xhr.send(jsonPayload);
@@ -284,6 +289,7 @@ function addContact() {
 
 
 async function loadContacts() {
+	
     const tmp = {
         search: "",
         userId: userId
@@ -317,10 +323,12 @@ async function loadContacts() {
         const tbody = document.getElementById("tbody");
         tbody.innerHTML = "";
 
-        const ids = [];
 
         jsonObject.results.forEach((result, index) => {
-            ids[index] = result.ID;
+            ids[index] = result.id;
+
+
+			console.log(ids[index]);
 
             // Create a new row
             const row = document.createElement("tr");
@@ -328,13 +336,13 @@ async function loadContacts() {
 
             // First name cell
             const firstNameCell = document.createElement("td");
-            firstNameCell.setAttribute("id", `first_Name${index}`);
+            firstNameCell.setAttribute("id", `firstName${index}`);
             firstNameCell.innerHTML = `<span>${result.firstName}</span>`;
             row.appendChild(firstNameCell);
 
             // Last name cell
             const lastNameCell = document.createElement("td");
-            lastNameCell.setAttribute("id", `last_Name${index}`);
+            lastNameCell.setAttribute("id", `lastName${index}`);
             lastNameCell.innerHTML = `<span>${result.lastName}</span>`;
             row.appendChild(lastNameCell);
 
@@ -359,7 +367,7 @@ async function loadContacts() {
             editButton.setAttribute("id", `edit_button${index}`);
             editButton.classList.add("w3-button", "w3-circle", "w3-lime");
             editButton.innerHTML = `<span class="glyphicon glyphicon-edit"></span>`;
-            editButton.onclick = () => edit_row(index);
+            editButton.onclick = () => editContact(index);
             actionsCell.appendChild(editButton);
 
             // Save button (initially hidden)
@@ -369,7 +377,7 @@ async function loadContacts() {
             saveButton.classList.add("w3-button", "w3-circle", "w3-lime");
             saveButton.style.display = "none";
             saveButton.innerHTML = `<span class="glyphicon glyphicon-saved"></span>`;
-            saveButton.onclick = () => save_row(index);
+            saveButton.onclick = () => saveContactEdit(index);
             actionsCell.appendChild(saveButton);
 
             // Delete button
@@ -377,7 +385,7 @@ async function loadContacts() {
             deleteButton.setAttribute("type", "button");
             deleteButton.classList.add("w3-button", "w3-circle", "w3-amber");
             deleteButton.innerHTML = `<span class="glyphicon glyphicon-trash"></span>`;
-            deleteButton.onclick = () => delete_row(index);
+            deleteButton.onclick = () => deleteContact(index);
             actionsCell.appendChild(deleteButton);
 
             row.appendChild(actionsCell);
@@ -385,12 +393,119 @@ async function loadContacts() {
             // Add row to table body
             tbody.appendChild(row);
         });
+		console.log("ids at the end of load" + ids[7]);
     } catch (error) {
         console.log(`Error fetching contacts: ${error.message}`);
     }
 }
 
-function searchContacts() {
+// Edit row function to open the modal with contact data
+function editContact(index) {
+	console.log("edit row index: " + index);
+	console.log("edit row array: " + ids);
+    const firstName = document.getElementById(`firstName${index}`).innerText;
+    const lastName = document.getElementById(`lastName${index}`).innerText;
+    const email = document.getElementById(`email${index}`).innerText;
+    const phone = document.getElementById(`phone${index}`).innerText;
+
+    // Populate modal with current contact details
+    document.getElementById("editFirstName").value = firstName;
+    document.getElementById("editLastName").value = lastName;
+    document.getElementById("editEmail").value = email;
+    document.getElementById("editPhone").value = phone;
+    document.getElementById("editContactIndex").value = index;
+
+    // Show the modal
+    document.getElementById("editContactModal").style.display = "block";
+}
+
+// Save edited contact function
+function saveContactEdit() {
+	
+    const index = document.getElementById("editContactIndex").value;
+    const updatedFirstName = document.getElementById("editFirstName").value;
+    const updatedLastName = document.getElementById("editLastName").value;
+    const updatedEmail = document.getElementById("editEmail").value;
+    const updatedPhone = document.getElementById("editPhone").value;
+
+    const contactId = ids[index]; // Get contact ID from ids array
+	console.log("save row index: " + index);
+	console.log("save row array: " + ids);
+
+    let tmp = {
+        id: contactId,
+        firstName: updatedFirstName,
+        lastName: updatedLastName,
+        email: updatedEmail,
+        phone: updatedPhone,
+        userId: userId
+    };
+
+    let jsonPayload = JSON.stringify(tmp);
+    let url = urlBase + '/UpdateContact.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                // Update the table with new values
+                document.getElementById(`firstName${index}`).innerText = updatedFirstName;
+                document.getElementById(`lastName${index}`).innerText = updatedLastName;
+                document.getElementById(`email${index}`).innerText = updatedEmail;
+                document.getElementById(`phone${index}`).innerText = updatedPhone;
+
+                // Hide the modal
+                document.getElementById("editContactModal").style.display = "none";
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+function deleteContact(index) {
+    if (!confirm("Are you sure you want to delete this contact?")) return;
+
+    const contactId = ids[index];  // Retrieve contact ID from the ids array
+    console.log("delete row " + contactId);
+
+    // Send contactId as an array, even if it's just one ID
+    let data = { ids: [contactId], userId: userId }; 
+
+    let jsonPayload = JSON.stringify(data);
+    let url = urlBase + '/DeleteContact.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                let response = JSON.parse(xhr.responseText);
+                if (response.error === "") {
+                    // Remove the row from the table
+                    document.getElementById(`row${index}`).remove();
+                    console.log('Contact successfully deleted');
+                } else {
+                    alert('Failed to delete contact: ' + response.error);
+                }
+            } else {
+                alert('Failed to communicate with server.');
+            }
+        }
+    };
+
+    xhr.send(jsonPayload);
+}
+
+
+
+function searchContacts() 
+{
     const content = document.getElementById("searchText").value.toUpperCase().split(' ');
     const rows = document.querySelectorAll("#contacts tr");
 
