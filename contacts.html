@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COP 4331 Contacts Demo</title>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=suse:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Montserrat', sans-serif; /* Apply Google font globally */
+        }
+    </style>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', function () {
@@ -13,13 +23,59 @@
 		}, false);
 	</script>
     <style>
-    /* General Styles */
+
+    #title {
+        font-weight: 700; /* Bolder */
+        font-size: 50px;   /* Increase the size */
+        color: #ffffff; /* UCF Yellow */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle shadow for emphasis */
+        letter-spacing: 2px; /* Adjust letter spacing for a bold look */
+        margin-top: 20px; /* Adjust the margin for spacing */
+        text-align: center; /* Center the text */
+    }
+
+        /* Body Styles */
     body {
-        background-color: #000000; /* Black background */
-        color: #FFFFFF;
-        font-family: 'Ubuntu', sans-serif;
         margin: 0;
-        padding: 0;
+        font-family: 'Ubuntu', sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Ensures the body is at least the height of the viewport */
+        background-image: url('images/ucfbackground2.png'); /* Your background image */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    /* Ensure the container takes up the remaining space */
+    .container {
+        flex: 1; /* Allows the container to grow and take up remaining space */
+        text-align: center;
+        padding-top: 50px;
+    }
+
+    /* Prevent unnecessary margins/padding that could cause white space */
+    .tables {
+    max-height: 600px; /* Set the maximum height for the table */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling (optional) */
+    }
+
+    /* To make sure the footer or extra spacing stays at the bottom */
+    footer {
+        margin-top: auto;
+    }
+
+    /* Dark overlay over the background image */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+        z-index: -1;
     }
 
     /* Container for the entire content */
@@ -28,12 +84,14 @@
         margin: 0 auto;
         text-align: center;
         padding-top: 50px;
+        position: relative;
+        z-index: 1;
     }
 
     /* Title Style */
     h1 {
         font-size: 3em;
-        color: #FFD700; /* UCF Gold color */
+        color: #FFFFFF; /* White color for title */
         margin-bottom: 20px;
     }
 
@@ -50,51 +108,43 @@
         padding: 10px;
         width: 40%;
         font-size: 1em;
-        border-radius: 5px;
+        border-radius: 80px;
         border: 2px solid #FFD700;
-        background-color: #1A1A1A;
-        color: #FFD700;
-        text-align: center;
+        background-color: #ffffff;
+        color: #000000;
+        text-align: left;
     }
 
     #searchContactButton, #addContactButton{
         padding: 10px 20px;
         font-size: 1em;
-        background-color: #FFD700; /* UCF Gold color */
+        background-color: #007bff; /* Consistent blue color */
         border: none;
         border-radius: 5px;
-        color: #1A1A1A;
+        color: #FFFFFF;
         cursor: pointer;
         transition: background-color 0.3s;
     }
-        /* Style the Reset button as an icon */
     #reset {
         padding: 10px;
-        background-color: #FFD700; /* UCF Gold color */
+        background-color: #FFD700;
         border: none;
-        border-radius: 5px;
-        color: #1A1A1A;
+        border-radius: 50px;
+        color: #FFFFFF;
         cursor: pointer;
         transition: background-color 0.3s;
     }
-
-    #reset i {
-        font-size: 1.2em; /* Increase icon size */
-    }
-
-    #searchContactButton:hover, #add-contact:hover, #reset:hover {
-        background-color: #FFC107; /* Slightly lighter gold on hover */
-    }
-        /* Style the Add Contact button */
     #add-contact {
-        padding: 10px 40px; /* Increase size to make it bigger */
-        font-size: 1em;
-        background-color: #FFD700; /* UCF Gold color */
+        padding: 10px;
+        background-color: #FFD700;
         border: none;
-        border-radius: 5px;
-        color: #1A1A1A;
+        border-radius: 50px;
+        color: #FFFFFF;
         cursor: pointer;
         transition: background-color 0.3s;
+    }
+    #searchContactButton:hover, #add-contact:hover, #reset:hover {
+        background-color: #bb9f03; /* Slightly darker blue on hover */
     }
 
     /* Table Style */
@@ -102,13 +152,20 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
-        background-color: #1A1A1A;
+        background-color: rgba(26, 26, 26, 0.8); /* Slight transparency */
         border: 2px solid #FFD700;
+        color: #FFFFFF; /* White text */
     }
 
+    /* Table Header Style */
     thead {
-        background-color: #333333; /* Dark gray for header */
-        color: #FFD700; /* Gold text for header */
+        position: sticky; /* Make the header sticky */
+        top: 0; /* Stick the header to the top */
+        z-index: 1; /* Ensure it stays above the table rows */
+        background-color: #000000; /* Set background to avoid transparency */
+        color: #ffffff; /* Set text color for the header */
+        font-weight: bold;
+        
     }
 
     th, td {
@@ -118,65 +175,98 @@
     }
 
     tbody tr:nth-child(even) {
-        background-color: #2C2C2C; /* Dark gray for alternating rows */
+        background-color: rgba(255, 255, 255, 0.2); /* Transparent dark row */
     }
 
     tbody tr:nth-child(odd) {
-        background-color: #1A1A1A; /* Black for alternating rows */
-    }
-
-    /* Input Fields for Adding Contact */
-    #firstNameText, #lastNameText, #emailText, #phoneText {
-        padding: 10px;
-        width: 80%;
-        margin-bottom: 10px;
-        font-size: 1em;
-        border-radius: 5px;
-        border: none;
-        display: block;
-        margin: 10px auto;
-        text-align: center;
-        background-color: #333333;
-        color: #FFD700;
+        background-color: rgba(255, 255, 255, 0.07); /* Slightly darker row */
     }
 
     /* Modal Styles */
+
+    /* Style for the modal */
     .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        padding-top: 60px;
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1; /* On top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Black background with transparency */
     }
 
     .modal-content {
-        background-color: #1A1A1A;
-        margin: 5% auto; /* 15% from the top and centered */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%; /* Could be more or less, depending on screen size */
-        color: #FFFFFF;
+    background-color: #202020;
+    border-radius: 8px;
+    padding: 20px;
+    width: 50%; /* Adjusted width to make it smaller */
+    max-width: 500px; /* Further limiting the max width */
+    margin: auto;
+    position: fixed; /* Changed from relative to fixed */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Translate it by half its width and height */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Box-shadow for better effect */
+    z-index: 9999; /* Make sure it's on top of everything */
+    text-align: left;
+}
+
+    .modal h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #fefefe;
+    }
+
+    .modal label {
+        display: block;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+        color: #fefefe;
+    }
+
+    /* Input fields */
+    .modal input[type="text"], .modal input[type="email"], .modal input[type="tel"] {
+        color:#fefefe;
+        width: 100%;
+        padding: 10px; /* Reduce padding to make the fields more compact */
+        margin-bottom: 10px; /* Reduce spacing between input fields */
+        border-radius: 4px;
+        border: 1px solid #888888;
+        font-size: 1em;
+        background-color: #444444;
+    }
+
+    .modal button {
+        width: 100%;
+        padding: 10px; /* Adjust padding to make the button fit better */
+        background-color: #FFD700;
+        border: none;
+        border-radius: 4px;
+        color: #000000;
+        font-size: 1em;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .modal button:hover {
+        background-color: #bb9f03;
     }
 
     .close {
         color: #aaa;
+        align-self: flex-end;
         float: right;
         font-size: 28px;
         font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: #FFD700;
-        text-decoration: none;
         cursor: pointer;
     }
+
+    .close:hover, .close:focus {
+        color: #bb9f03; /* Gold color */
+    }
+
 
     /* Logout Button Style */
     #logoutButton {
@@ -188,14 +278,46 @@
         background-color: #FFD700;
         border: none;
         border-radius: 5px;
-        color: #1A1A1A;
+        color: #000000;
         cursor: pointer;
         transition: background-color 0.3s;
     }
 
     #logoutButton:hover {
-        background-color: #FFC107;
+        background-color: #bb9f03;
     }
+        /* Styling for action buttons */
+    .custom-button {
+        border: none;
+        padding: 5px 6px;
+        font-size: 14px;
+        border-radius: 50%;
+        margin: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    /* Edit button styles */
+    .edit-button {
+        background-color: #dcdcdc;
+        color: white;
+    }
+
+    .edit-button:hover {
+        background-color: #45a049;
+    }
+
+    /* Delete button styles */
+    .delete-button {
+        background-color: #dcdcdc; 
+        color: white;
+    }
+
+    .delete-button:hover {
+        background-color: #e53935;
+    }
+
+
     </style>
 
 <script type="text/javascript" src="js/code.js"></script> <!-- This script contains your main functionality -->
@@ -228,16 +350,18 @@
         <div class="search-bar">
             <input type="text" id="searchText" placeholder="Search" onkeyup="searchContacts()">
             <button id="reset" onclick="resetSearch()">
-                <i class="fa fa-refresh"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: msFilter;"><path d="M10 11H7.101l.001-.009a4.956 4.956 0 0 1 .752-1.787 5.054 5.054 0 0 1 2.2-1.811c.302-.128.617-.226.938-.291a5.078 5.078 0 0 1 2.018 0 4.978 4.978 0 0 1 2.525 1.361l1.416-1.412a7.036 7.036 0 0 0-2.224-1.501 6.921 6.921 0 0 0-1.315-.408 7.079 7.079 0 0 0-2.819 0 6.94 6.94 0 0 0-1.316.409 7.04 7.04 0 0 0-3.08 2.534 6.978 6.978 0 0 0-1.054 2.505c-.028.135-.043.273-.063.41H2l4 4 4-4zm4 2h2.899l-.001.008a4.976 4.976 0 0 1-2.103 3.138 4.943 4.943 0 0 1-1.787.752 5.073 5.073 0 0 1-2.017 0 4.956 4.956 0 0 1-1.787-.752 5.072 5.072 0 0 1-.74-.61L7.05 16.95a7.032 7.032 0 0 0 2.225 1.5c.424.18.867.317 1.315.408a7.07 7.07 0 0 0 2.818 0 7.031 7.031 0 0 0 4.395-2.945 6.974 6.974 0 0 0 1.053-2.503c.027-.135.043-.273.063-.41H22l-4-4-4 4z"></path></svg>
             </button>
-            <button id="add-contact" onclick="openModal()">Add Contact</button>
+            <button id="add-contact" onclick="openModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: msFilter;"><path d="M4.5 8.552c0 1.995 1.505 3.5 3.5 3.5s3.5-1.505 3.5-3.5-1.505-3.5-3.5-3.5-3.5 1.505-3.5 3.5zM19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 19h10v-1c0-2.757-2.243-5-5-5H7c-2.757 0-5 2.243-5 5v1h2z"></path></svg>
+            </button>
         </div>
 
  <!--contact table-->
 		<div class="tables">
 			<div class="tbl-content" id="contactsTable">
 				<table id="contacts" cellpadding="0" cellspacing="0" border="0">
-					<thread>
+					<thead>
 						<tr>
 							<th>First&nbspName</th>
 							<th>Last&nbspName</th>
@@ -245,12 +369,11 @@
 							<th>Phone</th>
 							<th></th>
 						</tr>
-					</thread>
+					</thead>
 					<tbody id="tbody"></tbody>
 				</table>
 			</div>
 		</div>
-        </table>
     </div>
 
     <!-- Modal for adding new contacts -->
@@ -259,13 +382,17 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Add New Contact</h2>
             <label for="firstName">First Name:</label>
-            <input type="text" id="firstNameText"><br>
+            <input type="text" id="firstNameText" placeholder="Enter first name"><br>
+    
             <label for="lastName">Last Name:</label>
-            <input type="text" id="lastNameText"><br>
+            <input type="text" id="lastNameText" placeholder="Enter last name"><br>
+    
             <label for="email">Email:</label>
-            <input type="text" id="emailText"><br>
+            <input type="email" id="emailText" placeholder="Enter email address"><br>
+    
             <label for="phone">Phone:</label>
-            <input type="tel" id="phoneText" placeholder="(123) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" required>
+            <input type="tel" id="phoneText" placeholder="Enter phone number"><br>
+    
             <button onclick="saveContact()">Save Contact</button>
         </div>
     </div>
@@ -304,7 +431,6 @@
         <button onclick="document.getElementById('deleteContactModal').style.display='none'">Cancel</button>
     </div>
 </div>
-
 
 </body>
 </html>

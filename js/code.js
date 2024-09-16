@@ -1,7 +1,7 @@
 const urlBase = 'http://cop4331.xyz/LAMPAPI';
 const extension = 'php';
 
-let userId = 1;
+let userId = 0;
 let firstName = "";
 let lastName = "";
 let ids = [];
@@ -12,9 +12,8 @@ function doLogin()
 	firstName = "";
 	lastName = "";
 	
-	let login = document.getElementById("Username").value;
-	let password = document.getElementById("Password").value;
-
+	let login = document.getElementById("UsernameL").value;
+	let password = document.getElementById("PasswordL").value;
 //	var hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
@@ -114,60 +113,6 @@ function createAccount()
 	}
 }
 
-function createAccount()
-{
-	userId = 0;
-	
-	let firstName = document.getElementById("firstName").value;;
-	let lastName = document.getElementById("lastName").value;;
-	let login = document.getElementById("Username").value;
-	let password = document.getElementById("Password").value;
-//	var hash = md5( password );
-	
-	document.getElementById("registerResult").innerHTML = "";
-
-	let tmp = {login:login,password:password,firstName:firstName,lastName:lastName};
-//	var tmp = {login:login,password:hash,firstName:firstName,lastName:lastName};
-	let jsonPayload = JSON.stringify( tmp );
-	
-	let url = urlBase + '/Register.' + extension;
-
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse( xhr.responseText );
-				userId = jsonObject.id;
-		
-				if( userId < 1 )
-				{		
-					document.getElementById("registerResult").innerHTML = "User is already registered";
-					return;
-				}
-		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
-				login = jsonObject.login;
-				password = jsonObject.password
-
-				saveCookie();
-	
-				window.location.href = "index.html";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("registerResult").innerHTML = err.message;
-	}
-}
-
 function saveCookie()
 {
 	let minutes = 20;
@@ -206,11 +151,9 @@ function readCookie()
 	else
 	{
 		updateWelcomeTitle();
-
 //		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
 	}
 }
-
 
 // Update welcome title with user's first name
 function updateWelcomeTitle() {
@@ -231,6 +174,7 @@ function doLogout()
 	document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
 	window.location.href = "index.html";
 }
+
 function showTable() {
     var x = document.getElementById("addMe");
     var contacts = document.getElementById("contactsTable")
@@ -242,6 +186,7 @@ function showTable() {
         contacts.style.display = "block";
     }
 }
+
 function addContact() {
 
     let firstName = document.getElementById("firstNameText").value;
@@ -365,26 +310,16 @@ async function loadContacts() {
             const editButton = document.createElement("button");
             editButton.setAttribute("type", "button");
             editButton.setAttribute("id", `edit_button${index}`);
-            editButton.classList.add("w3-button", "w3-circle", "w3-lime");
-            editButton.innerHTML = `<span class="glyphicon glyphicon-edit"></span>`;
+            editButton.classList.add("custom-button", 'edit-button');
+            editButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>`;
             editButton.onclick = () => editContact(index);
             actionsCell.appendChild(editButton);
-
-            // Save button (initially hidden)
-            const saveButton = document.createElement("button");
-            saveButton.setAttribute("type", "button");
-            saveButton.setAttribute("id", `save_button${index}`);
-            saveButton.classList.add("w3-button", "w3-circle", "w3-lime");
-            saveButton.style.display = "none";
-            saveButton.innerHTML = `<span class="glyphicon glyphicon-saved"></span>`;
-            saveButton.onclick = () => saveContactEdit(index);
-            actionsCell.appendChild(saveButton);
 
             // Delete button
             const deleteButton = document.createElement("button");
             deleteButton.setAttribute("type", "button");
-            deleteButton.classList.add("w3-button", "w3-circle", "w3-amber");
-            deleteButton.innerHTML = `<span class="glyphicon glyphicon-trash"></span>`;
+            deleteButton.classList.add("custom-button", 'delete-button');
+            deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M14 11h8v2h-8zM4.5 8.552c0 1.995 1.505 3.5 3.5 3.5s3.5-1.505 3.5-3.5-1.505-3.5-3.5-3.5-3.5 1.505-3.5 3.5zM4 19h10v-1c0-2.757-2.243-5-5-5H7c-2.757 0-5 2.243-5 5v1h2z"></path></svg>`;
             deleteButton.onclick = () => deleteContact(index);
             actionsCell.appendChild(deleteButton);
 
@@ -502,8 +437,6 @@ function deleteContact(index) {
     xhr.send(jsonPayload);
 }
 
-
-
 function searchContacts() 
 {
     const content = document.getElementById("searchText").value.toUpperCase().split(' ');
@@ -526,22 +459,3 @@ function searchContacts()
         }
     });
 }
-
-//wait for the full html to load
-document.addEventListener('DOMContentLoaded', function() {
-    //for formatting the phone number inputs
-    document.getElementById('phoneText').addEventListener('input', function (e) {
-		//only take numbers
-        let value = e.target.value.replace(/\D/g, ''); 
-		//seperate sections of the phone number
-        if (value.length > 3 && value.length <= 6) {
-            e.target.value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
-        } else if (value.length > 6) {
-            e.target.value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
-        } else if (value.length > 0) {
-            e.target.value = `(${value.slice(0, 3)}`;
-        } else {
-            e.target.value = value;
-        }
-    });
-});
