@@ -200,18 +200,28 @@
         <!-- Close Button -->
         <span id="closeButton" class="close" onclick="hideRegister()">&times;</span>
         <h2>Register</h2>
-        <!-- Register input boxes -->
-			<label for="firstName">First Name:</label>
-            <input type="text" id="firstName" placeholder="Enter first name" required>
-			<label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" placeholder="Enter last name" required>
-			<label for="username">Username:</label>
-            <input type="text" id="Username" placeholder="Enter username" required>
-			<label for="password">Password:</label>
-            <input type="password" id="Password" placeholder="Enter password" required>
-            <!-- Register Button -->
-            <button type="button" class="buttons" onclick="createAccount();">Sign Up</button>
-            <span class="text" id="registerResult"></span>
+        <form action="">
+			<!--Filled out to SignUp to our application-->
+			<div id="login-input">
+				<label id="firstNameRegLabel" for="firstName">First Name:</label>
+				<input type="text" id ="firstName"  placeholder="First Name" required>
+			</div>
+			<div id="login-input">
+				<label id="lastNameRegLabel" for="lastName">Last Name:</label>
+				<input type="text" id ="lastName"  placeholder="Last Name" required>
+			</div>
+			<div id="login-input">
+				<label id="usernameRegLabel" for="Username">Username:</label>
+				<input type="text" id="Username" placeholder="Username" required>
+			</div>
+			<div id="login-input">
+				<label id="passwordRegLabel" for="Password">Password:</label>
+				<input type="password" id ="Password"  placeholder="Password" required>
+			</div>
+		        <!-- Register Button -->
+			<button type="button" class="buttons" onclick="createAccount();"> Sign Up </button>
+			<span class="text" id="registerResult"></span>
+		</form>
     </div>
 </div>
 
