@@ -1,5 +1,9 @@
 
 <?php
+	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+		header("HTTP/1.1 200 OK");
+		exit();
+	}
 	$inData = getRequestInfo();
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
