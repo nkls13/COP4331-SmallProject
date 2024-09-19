@@ -132,8 +132,20 @@ function createAccount()
 				password = jsonObject.password
 
 				saveCookie();
-	
-				window.location.href = "index.html";
+
+				// Display success message
+				const successMessage = document.getElementById('successMessage');
+				successMessage.textContent = "User successfully registered.";
+				successMessage.style.display = 'block'; // Show the message
+				console.log("Success message shown"); // Debugging
+			
+				// Hide the message after 3 seconds
+				setTimeout(() => {
+					successMessage.style.display = 'none';
+					console.log("Success message hidden"); // Debugging
+					window.location.href = "index.html";
+				}, 2000);
+			 
 			}
 		};
 		xhr.send(jsonPayload);
@@ -256,8 +268,19 @@ function addContact() {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log("Contact has been added");
-                // Clear input fields in form 
-                //document.getElementById("addMe").reset();
+                // Display success message
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = "Contact successfully added.";
+                successMessage.style.display = 'block'; // Show the message
+				console.log("Success message shown"); // Debugging
+
+                
+                // Hide the message after 3 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+					console.log("Success message hidden"); // Debugging
+                }, 2000);
+
                 // reload contacts table and switch view to show
                 loadContacts();
                 closeModal();

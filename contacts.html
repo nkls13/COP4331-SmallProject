@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COP 4331 Contacts Demo</title>
-    <link href="https://fonts.googleapis.com/css2?family=suse:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             font-family: 'Montserrat', sans-serif; /* Apply Google font globally */
@@ -41,7 +40,7 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh; /* Ensures the body is at least the height of the viewport */
-        background-image: url('images/ucfbackground2.png'); /* Your background image */
+        background-image: url('images/contactsbackground.png'); /* Background Image */
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -317,6 +316,21 @@
         background-color: #e53935;
     }
 
+    #successMessage {
+    display: none; /* Hidden by default */
+    position: fixed; /* Makes the message appear on top of everything */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Shift by half its width and height */
+    background-color: rgba(255, 255, 255, 0.9); 
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    padding: 15px 30px; /* Space inside the banner */
+    border-radius: 8px;
+    z-index: 10000; /* Ensure it appears on top */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
 
     </style>
 
@@ -358,6 +372,9 @@
             </button>
         </div>
 
+
+        <div id="successMessage" style="display:none; color: rgb(0, 0, 0); font-weight: bold;">Contact successfully added.</div>
+    
  <!--contact table-->
 		<div class="tables">
 			<div class="tbl-content" id="contactsTable">
@@ -393,6 +410,8 @@
             <button onclick="saveContact()">Save Contact</button>
         </div>
     </div>
+
+
     <!-- Modal for editing existing contacts -->
 <div id="editContactModal" class="modal">
     <div class="modal-content">
