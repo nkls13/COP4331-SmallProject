@@ -1,13 +1,21 @@
 <?php
-	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-		header("HTTP/1.1 200 OK");
-		exit();
-	}
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("HTTP/1.1 200 OK");
+    exit();
+}
 	$inData = getRequestInfo();
 	
 	// I want an object array
 	$searchResults = [];
 	$searchCount = 0;
+
+	// Variables for pagination
+	//How many to show at a time
+	$limit = isset($inData['limit']) ? (int)$inData['limit'] : 10; 
+
+	//Tracks how many already showed
+	$offset = isset($inData['offset']) ? (int)$inData['offset'] : 0;
+
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
 	if ($conn->connect_error) 
@@ -17,13 +25,15 @@
 	else
 	{   
         // Like searches for Partial Matches
-		$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND UserId=?");
+		$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR CONCAT(FirstName, ' ', LastName) LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND UserId=? LIMIT ? OFFSET ?");
 		
         // The % allows for different characters before or after the search term
-		$searchTerm = "%" . $inData["searchTerm"] . "%";
+		$searchTerm = "%" . $inData["search"] . "%";
 
-		// Binding the search term for FirstName, LastName, Phone, and Email
-		$stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $inData["userId"]);
+		// Binding the search term for FirstName, tName, Phone, and Email
+		//$stmt->bind_param("sssssi", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $inData["userId"]);
+		$stmt->bind_param("sssssiis", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm,  $inData["userId"], $limit, $offset);
+
 		$stmt->execute();
 		
 		$result = $stmt->get_result();
