@@ -270,10 +270,23 @@ function addContact() {
     return 0;
 }
 
-async function loadContacts() {
-	
+function resetQuery() {
+    ids = [];
+    nloaded = 0;
+    offset = 0;
+    document.getElementById("tbody").innerHTML = "";
+    loadContacts(true);
+}
+
+// Reset decides whether to clean tbody or not
+// Used to fix duplicate row error from fast key input and await
+async function loadContacts(reset = false) {
+
+    const searchText = document.getElementById("searchText").value;
+    console.log(searchText);
+
     const tmp = {
-        search: "",
+        search: searchText,
         userId: userId,
         limit: 20,
         offset : offset
@@ -305,9 +318,9 @@ async function loadContacts() {
 
         // Clear any existing content in the table body
         const tbody = document.getElementById("tbody");
-        //tbody.innerHTML = "";
+        if(reset) tbody.innerHTML = "";
 
-        jsonObject.results.forEach((result, index) => {
+        (jsonObject.results || []).forEach((result, index) => {
             ids[nloaded+index] = result.id;
 
 			console.log(ids[nloaded+index]);
@@ -365,22 +378,24 @@ async function loadContacts() {
             // Add row to table body
             tbody.appendChild(row);
         });
-        nloaded += jsonObject.results.length;
-        offset += jsonObject.results.length;
+
+        nloaded += (jsonObject.results || []).length;
+        offset += (jsonObject.results || []).length;
 		console.log("ids at the end of load" + ids[7]);
+
+        // Observe last row for more query if there are more to load
+        if (jsonObject.results != null)
+            myObserver.observe(document.getElementById(`row${nloaded-1}`));
     } catch (error) {
         console.log(`Error fetching contacts: ${error.message}`);
     }
-
-    // Observe last row for more query
-    myObserver.observe(document.getElementById(`row${nloaded-1}`));
 }
 
 // Lazy loading stuff
 const callback = (entries, observer) => {
-    console.log(entries);
+    console.log(entries);                                       // FIXME: Delete
     if(!entries[0].isIntersecting) return;
-    console.log(document.getElementById(`row${nloaded-1}`));
+    console.log(document.getElementById(`row${nloaded-1}`));    // FIXME: Delete
     observer.unobserve(entries[0].target);
     loadContacts();
 }
