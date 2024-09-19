@@ -10,18 +10,18 @@ let offset = 0;
 
 function doLogin()
 {
-	userId = 0;
+    userId = 0;
 	firstName = "";
 	lastName = "";
 	
-	let login = document.getElementById("UsernameL").value;
-	let password = document.getElementById("PasswordL").value;
-//	var hash = md5( password );
+	let login = document.getElementById("UsernameL");
+	let password = document.getElementById("PasswordL");
+    //THIS LINE HANDLES HASHING FOR LOGIN
+	var hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
 
-	let tmp = {login:login,password:password};
-//	var tmp = {login:login,password:hash};
+	let tmp = {login:login.value,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
 	
 	let url = urlBase + '/Login.' + extension;
@@ -58,23 +58,52 @@ function doLogin()
 	{
 		document.getElementById("loginResult").innerHTML = err.message;
 	}
-
 }
 
 function createAccount()
 {
 	userId = 0;
+    errorReg = false;
 	
-	let firstName = document.getElementById("firstName").value;;
-	let lastName = document.getElementById("lastName").value;;
-	let login = document.getElementById("Username").value;
-	let password = document.getElementById("Password").value;
-//	var hash = md5( password );
+	let firstName = document.getElementById("firstName");
+	let lastName = document.getElementById("lastName");
+	let login = document.getElementById("Username");
+	let password = document.getElementById("Password");
+
+    if(!firstName.value.trim()){
+        errorReg = true;
+        showError(firstName, "firstNameRegLabel");
+    } else {
+        removeError(firstName, "firstNameRegLabel");
+    }
+    if(!lastName.value.trim()){
+        errorReg = true;
+        showError(lastName, "lastNameRegLabel");
+    } else {
+        removeError(lastName, "lastNameRegLabel");
+    }
+    if(!login.value.trim()){
+        errorReg = true;
+        showError(login, "usernameRegLabel");
+    } else {
+        removeError(login, "usernameRegLabel");
+    }
+    if(!password.value.trim()){
+        errorReg = true;  
+        showError(password, "passwordRegLabel");     
+    } else {
+        removeError(password, "passwordRegLabel");
+    }
+    //if at least one field has an error, return so user can correct input
+    if(errorReg){
+        return;
+    }
+
+ 	var hash = md5( password );
 	
 	document.getElementById("registerResult").innerHTML = "";
 
-	let tmp = {login:login,password:password,firstName:firstName,lastName:lastName};
-//	var tmp = {login:login,password:hash,firstName:firstName,lastName:lastName};
+	let tmp = {login:login.value,password:hash,firstName:firstName.value,lastName:lastName.value};
 	let jsonPayload = JSON.stringify( tmp );
 	
 	let url = urlBase + '/Register.' + extension;
@@ -191,18 +220,29 @@ function showTable() {
 
 function addContact() {
 
-    let firstName = document.getElementById("firstNameText").value;
-    let lastName = document.getElementById("lastNameText").value;
-    let phone = document.getElementById("phoneText").value;
-    let email = document.getElementById("emailText").value;
+    let email = document.getElementById('emailText');
+    let firstName = document.getElementById("firstNameText");
+    let lastName = document.getElementById("lastNameText");
+    let phone = document.getElementById("phoneText");
+    //let genUserId = generateUniqueUserId();
 
+    //check for all fields filled out correctly
+
+    //use trim to remove spaces creating bugs
+    // Validate first name
+   errorChecker = validateInput(firstName, lastName, email, phone);
+
+    if(errorChecker == true){
+        console.log("Correct errors before submitting");
+        return 1;
+    }
 
     let tmp = {
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        email: email,
-        userId: userId
+        firstName: firstName.value,
+        lastName: lastName.value,
+        phone: phone.value,
+        email: email.value,
+       userId: userId
     };
 
     let jsonPayload = JSON.stringify(tmp);
@@ -216,14 +256,9 @@ function addContact() {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log("Contact has been added");
-                
-                // Clear input fields manually
-                document.getElementById("firstNameText").value = "";
-                document.getElementById("lastNameText").value = "";
-                document.getElementById("phoneText").value = "";
-                document.getElementById("emailText").value = "";
-
-                // Reload contacts table and close the modal
+                // Clear input fields in form 
+                //document.getElementById("addMe").reset();
+                // reload contacts table and switch view to show
                 loadContacts();
                 closeModal();
             }
@@ -232,6 +267,7 @@ function addContact() {
     } catch (err) {
         console.log(err.message);
     }
+    return 0;
 }
 
 async function loadContacts() {
@@ -354,8 +390,8 @@ const myObserver = new IntersectionObserver(callback);
 function editContact(index) {
 	console.log("edit row index: " + index);
 	console.log("edit row array: " + ids);
-    const firstName = document.getElementById(`firstName${index}`).innerText;
-    const lastName = document.getElementById(`lastName${index}`).innerText;
+    const firstName = document.getElementById(`first_Name${index}`).innerText;
+    const lastName = document.getElementById(`last_Name${index}`).innerText;
     const email = document.getElementById(`email${index}`).innerText;
     const phone = document.getElementById(`phone${index}`).innerText;
 
@@ -374,47 +410,56 @@ function editContact(index) {
 function saveContactEdit() {
 	
     const index = document.getElementById("editContactIndex").value;
-    const updatedFirstName = document.getElementById("editFirstName").value;
-    const updatedLastName = document.getElementById("editLastName").value;
-    const updatedEmail = document.getElementById("editEmail").value;
-    const updatedPhone = document.getElementById("editPhone").value;
+    const updatedFirstName = document.getElementById("editFirstName");
+    const updatedLastName = document.getElementById("editLastName");
+    const updatedEmail = document.getElementById("editEmail");
+    const updatedPhone = document.getElementById("editPhone");
 
-    const contactId = ids[index]; // Get contact ID from ids array
-	console.log("save row index: " + index);
-	console.log("save row array: " + ids);
+    //validate here
+    errorCheckEdit = validateEditInput(updatedFirstName, updatedLastName, updatedEmail, updatedPhone)
 
-    let tmp = {
-        id: contactId,
-        firstName: updatedFirstName,
-        lastName: updatedLastName,
-        email: updatedEmail,
-        phone: updatedPhone,
-        userId: userId
-    };
-
-    let jsonPayload = JSON.stringify(tmp);
-    let url = urlBase + '/UpdateContact.' + extension;
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    try {
-        xhr.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                // Update the table with new values
-                document.getElementById(`firstName${index}`).innerText = updatedFirstName;
-                document.getElementById(`lastName${index}`).innerText = updatedLastName;
-                document.getElementById(`email${index}`).innerText = updatedEmail;
-                document.getElementById(`phone${index}`).innerText = updatedPhone;
-
-                // Hide the modal
-                document.getElementById("editContactModal").style.display = "none";
-            }
-        };
-        xhr.send(jsonPayload);
-    } catch (err) {
-        console.log(err.message);
+    if(errorCheckEdit == true){
+        console.log("Correct errors before submitting");
+        return 1;
     }
+    
+
+const contactId = ids[index]; // Get contact ID from ids array
+console.log("save row index: " + index);
+console.log("save row array: " + ids);
+
+let tmp = {
+id: contactId,
+firstName: updatedFirstName.value,
+lastName: updatedLastName.value,
+email: updatedEmail.value,
+phone: updatedPhone.value,
+userId: userId
+};
+
+let jsonPayload = JSON.stringify(tmp);
+let url = urlBase + '/UpdateContact.' + extension;
+
+let xhr = new XMLHttpRequest();
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+try {
+xhr.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        // Update the table with new values
+        document.getElementById(`first_Name${index}`).innerText = updatedFirstName.value;
+        document.getElementById(`last_Name${index}`).innerText = updatedLastName.value;
+        document.getElementById(`email${index}`).innerText = updatedEmail.value;
+        document.getElementById(`phone${index}`).innerText = updatedPhone.value;
+
+        // Hide the modal
+        document.getElementById("editContactModal").style.display = "none";
+    }
+};
+xhr.send(jsonPayload);
+} catch (err) {
+console.log(err.message);
+}
 }
 
 function deleteContact(index) {
@@ -475,3 +520,149 @@ function searchContacts()
         }
     });
 }
+
+function validateEmail(email) {
+    let emailCheck = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    return emailCheck.test(email);
+}
+
+//create red box plus *
+function showError(inputElement, labelId) {
+    inputElement.style.border = "2px solid red";
+    let label = document.getElementById(labelId);
+    if (!label.querySelector('.error-asterisk')) {
+        label.innerHTML += ' <span class="error-asterisk" style="color: red;">*</span>';
+    }
+}
+
+//take away the red box + *
+function removeError(inputElement, labelId) {
+    inputElement.style.border = ""; // Remove red border
+    let label = document.getElementById(labelId);
+    let asterisk = label.querySelector('.error-asterisk');
+    if (asterisk) {
+        asterisk.remove(); // Remove the asterisk if present
+    }
+}
+
+function showErrorEdit(inputElement, labelId) {
+    inputElement.style.border = "2px solid red";
+    let label = document.getElementById(labelId);
+    if (!label.querySelector('.error-asterisk')) {
+        label.innerHTML += ' <span class="error-asterisk" style="color: red;">*</span>';
+    }
+}
+
+//take away the red box + *
+function removeErrorEdit(inputElement, labelId) {
+    inputElement.style.border = ""; // Remove red border
+    let label = document.getElementById(labelId);
+    let asterisk = label.querySelector('.error-asterisk');
+    if (asterisk) {
+        asterisk.remove(); // Remove the asterisk if present
+    }
+}
+
+function validateInput(firstName, lastName, email, phone) {
+    errorChecker = false;
+    
+    if (!firstName.value.trim()) {
+        showError(firstName, "firstNameLabel");
+        errorChecker = true;
+    } else {
+        removeError(firstName, "firstNameLabel");
+    }
+
+    // Validate last name
+    if (!lastName.value.trim()) {
+        showError(lastName, "lastNameLabel");
+        errorChecker = true;
+    } else {
+        removeError(lastName, "lastNameLabel");
+    }
+
+    // Validate email using existing validateEmail function
+    if (!validateEmail(email.value.trim())) {
+        showError(email, "emailLabel");
+        errorChecker = true;
+    } else {
+        removeError(email, "emailLabel");
+    }
+
+    // Validate phone number format
+    let phonePattern = /^\(\d{3}\) \d{3}-\d{4}$/;
+    if (!phonePattern.test(phone.value.trim())) {
+        showError(phone, "phoneLabel");
+        errorChecker = true;
+    } else {
+        removeError(phone, "phoneLabel");
+    }
+    return errorChecker;
+}
+
+function validateEditInput(firstName, lastName, email, phone) {
+    errorChecker = false;
+    
+    if (!firstName.value.trim()) {
+        showErrorEdit(firstName, "firstNameEditLabel");
+        errorChecker = true;
+    } else {
+        removeErrorEdit(firstName, "firstNameEditLabel");
+    }
+
+    // Validate last name
+    if (!lastName.value.trim()) {
+        showErrorEdit(lastName, "lastNameEditLabel");
+        errorChecker = true;
+    } else {
+        removeErrorEdit(lastName, "lastNameEditLabel");
+    }
+
+    // Validate email using existing validateEmail function
+    if (!validateEmail(email.value.trim())) {
+        showErrorEdit(email, "emailEditLabel");
+        errorChecker = true;
+    } else {
+        removeErrorEdit(email, "emailEditLabel");
+    }
+
+    // Validate phone number format
+    let phonePattern = /^\(\d{3}\) \d{3}-\d{4}$/;
+    if (!phonePattern.test(phone.value.trim())) {
+        showErrorEdit(phone, "phoneEditLabel");
+        errorChecker = true;
+    } else {
+        removeErrorEdit(phone, "phoneEditLabel");
+    }
+    return errorChecker;
+}
+
+//wait for the full html to load
+document.addEventListener('DOMContentLoaded', function() {
+    //function to take input based on edit or add contact
+    function formatPhoneNumber(inputElement) {
+        inputElement.addEventListener('input', function (e) {
+            //only let the user put in numbers
+            let value = e.target.value.replace(/\D/g, ''); 
+           
+            //format phone number based on length of current input
+            if (value.length > 3 && value.length <= 6) {
+                e.target.value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+            } else if (value.length > 6) {
+                e.target.value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+            } else if (value.length > 0) {
+                e.target.value = `(${value.slice(0, 3)}`;
+            } else {
+                e.target.value = value;
+            }
+        });
+    }
+
+   
+    const phoneText = document.getElementById('phoneText');
+    const editPhoneText = document.getElementById('editPhone');
+    
+    //check if the field is filled before applying
+    if (phoneText) formatPhoneNumber(phoneText); 
+    if (editPhoneText) formatPhoneNumber(editPhoneText);
+});

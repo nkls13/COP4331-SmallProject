@@ -1,6 +1,9 @@
 
 <?php
-
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+        header("HTTP/1.1 200 OK");
+        exit();
+    }
 	$inData = getRequestInfo();
 	
     //Where does the things inside [] come from? why is it camelCase? The data base has it spelt differently?

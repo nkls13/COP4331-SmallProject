@@ -1,4 +1,9 @@
 <?php
+
+	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+		header("HTTP/1.1 200 OK");
+		exit();
+	}
 	$inData = getRequestInfo();
 	
 	$firstName = $inData["firstName"];
@@ -14,6 +19,19 @@
 	} 
 	else
 	{
+		//first make sure userID contact getting added EXISTS
+		$stmt = $conn->prepare("SELECT ID FROM Users WHERE ID = ?");
+		$stmt->bind_param("i", $userId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+
+		if ($result->num_rows == 0) {
+			$stmt->close();
+			$conn->close();
+			returnWithError("User does not exist");
+			
+		}
+
 		$stmt = $conn->prepare("INSERT into Contacts (FirstName, LastName, Phone, Email, UserID) VALUES(?,?,?,?, ?)");
 		$stmt->bind_param("ssssi", $firstName, $lastName, $phone, $email, $userId);
 		$stmt->execute();

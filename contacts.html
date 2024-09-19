@@ -381,18 +381,14 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Add New Contact</h2>
-            <label for="firstName">First Name:</label>
+            <label id= firstNameLabel for="firstNameText">First Name:</label>
             <input type="text" id="firstNameText" placeholder="Enter first name"><br>
-    
-            <label for="lastName">Last Name:</label>
+            <label id=lastNameLabel for="lastNameText">Last Name:</label>
             <input type="text" id="lastNameText" placeholder="Enter last name"><br>
-    
-            <label for="email">Email:</label>
-            <input type="email" id="emailText" placeholder="Enter email address"><br>
-    
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phoneText" placeholder="Enter phone number"><br>
-    
+            <label id = emailLabel for="emailText">Email:</label>
+            <input type="email" id="emailText" placeholder="Enter email address" required><br>
+            <label id=phoneLabel for="phoneText">Phone:</label>
+            <input type="tel" id="phoneText" placeholder="Enter phone number" pattern="\(\d{3}\) \d{3}-\d{4}" required>
             <button onclick="saveContact()">Save Contact</button>
         </div>
     </div>
@@ -402,16 +398,16 @@
         <span class="close" onclick="document.getElementById('editContactModal').style.display='none'">&times;</span>
         <h2>Edit Contact</h2>
         <form id="editContactForm">
-            <label for="editFirstName">First Name:</label>
+            <label id="firstNameEditLabel" for="editFirstName">First Name:</label>
             <input type="text" id="editFirstName" name="editFirstName"><br><br>
 
-            <label for="editLastName">Last Name:</label>
+            <label id="lastNameEditLabel" for="editLastName">Last Name:</label>
             <input type="text" id="editLastName" name="editLastName"><br><br>
 
-            <label for="editEmail">Email:</label>
+            <label id="emailEditLabel" for="editEmail">Email:</label>
             <input type="text" id="editEmail" name="editEmail"><br><br>
 
-            <label for="editPhone">Phone:</label>
+            <label id="phoneEditLabel" for="editPhone">Phone:</label>
             <input type="text" id="editPhone" name="editPhone"><br><br>
 
             <!-- Hidden input to store index -->
