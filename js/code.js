@@ -5,6 +5,8 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 let ids = [];
+let nloaded = 0;
+let offset = 0;
 
 function doLogin()
 {
@@ -130,8 +132,20 @@ function createAccount()
 				password = jsonObject.password
 
 				saveCookie();
-	
-				window.location.href = "index.html";
+
+				// Display success message
+				const successMessage = document.getElementById('successMessage');
+				successMessage.textContent = "User successfully registered.";
+				successMessage.style.display = 'block'; // Show the message
+				console.log("Success message shown"); // Debugging
+			
+				// Hide the message after 3 seconds
+				setTimeout(() => {
+					successMessage.style.display = 'none';
+					console.log("Success message hidden"); // Debugging
+					window.location.href = "index.html";
+				}, 2000);
+			 
 			}
 		};
 		xhr.send(jsonPayload);
@@ -254,8 +268,19 @@ function addContact() {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log("Contact has been added");
-                // Clear input fields in form 
-                //document.getElementById("addMe").reset();
+                // Display success message
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = "Contact successfully added.";
+                successMessage.style.display = 'block'; // Show the message
+				console.log("Success message shown"); // Debugging
+
+                
+                // Hide the message after 3 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+					console.log("Success message hidden"); // Debugging
+                }, 2000);
+
                 // reload contacts table and switch view to show
                 loadContacts();
                 closeModal();
@@ -268,12 +293,26 @@ function addContact() {
     return 0;
 }
 
+function resetQuery() {
+    ids = [];
+    nloaded = 0;
+    offset = 0;
+    document.getElementById("tbody").innerHTML = "";
+    loadContacts(true);
+}
 
-async function loadContacts() {
-	
+// Reset decides whether to clean tbody or not
+// Used to fix duplicate row error from fast key input and await
+async function loadContacts(reset = false) {
+
+    const searchText = document.getElementById("searchText").value;
+    console.log(searchText);
+
     const tmp = {
-        search: "",
-        userId: userId
+        search: searchText,
+        userId: userId,
+        limit: 20,
+        offset : offset
     };
 
     const jsonPayload = JSON.stringify(tmp);
@@ -302,40 +341,38 @@ async function loadContacts() {
 
         // Clear any existing content in the table body
         const tbody = document.getElementById("tbody");
-        tbody.innerHTML = "";
+        if(reset) tbody.innerHTML = "";
 
+        (jsonObject.results || []).forEach((result, index) => {
+            ids[nloaded+index] = result.id;
 
-        jsonObject.results.forEach((result, index) => {
-            ids[index] = result.id;
-
-
-			console.log(ids[index]);
+			console.log(ids[nloaded+index]);
 
             // Create a new row
             const row = document.createElement("tr");
-            row.setAttribute("id", `row${index}`);
+            row.setAttribute("id", `row${nloaded+index}`);
 
             // First name cell
             const firstNameCell = document.createElement("td");
-            firstNameCell.setAttribute("id", `first_Name${index}`);
+            firstNameCell.setAttribute("id", `firstName${nloaded+index}`);
             firstNameCell.innerHTML = `<span>${result.firstName}</span>`;
             row.appendChild(firstNameCell);
 
             // Last name cell
             const lastNameCell = document.createElement("td");
-            lastNameCell.setAttribute("id", `last_Name${index}`);
+            lastNameCell.setAttribute("id", `lastName${nloaded+index}`);
             lastNameCell.innerHTML = `<span>${result.lastName}</span>`;
             row.appendChild(lastNameCell);
 
             // Email cell
             const emailCell = document.createElement("td");
-            emailCell.setAttribute("id", `email${index}`);
+            emailCell.setAttribute("id", `email${nloaded+index}`);
             emailCell.innerHTML = `<span>${result.email}</span>`;
             row.appendChild(emailCell);
 
             // Phone cell
             const phoneCell = document.createElement("td");
-            phoneCell.setAttribute("id", `phone${index}`);
+            phoneCell.setAttribute("id", `phone${nloaded+index}`);
             phoneCell.innerHTML = `<span>${result.phone}</span>`;
             row.appendChild(phoneCell);
 
@@ -345,18 +382,19 @@ async function loadContacts() {
             // Edit button
             const editButton = document.createElement("button");
             editButton.setAttribute("type", "button");
-            editButton.setAttribute("id", `edit_button${index}`);
+            editButton.setAttribute("id", `edit_button${nloaded+index}`);
             editButton.classList.add("custom-button", 'edit-button');
             editButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>`;
-            editButton.onclick = () => editContact(index);
+            editButton.onclick = () => editContact(parseInt(editButton.getAttribute("id").slice(11)));
             actionsCell.appendChild(editButton);
 
             // Delete button
             const deleteButton = document.createElement("button");
             deleteButton.setAttribute("type", "button");
+            deleteButton.setAttribute("id", `delete_button${nloaded+index}`);
             deleteButton.classList.add("custom-button", 'delete-button');
             deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M14 11h8v2h-8zM4.5 8.552c0 1.995 1.505 3.5 3.5 3.5s3.5-1.505 3.5-3.5-1.505-3.5-3.5-3.5-3.5 1.505-3.5 3.5zM4 19h10v-1c0-2.757-2.243-5-5-5H7c-2.757 0-5 2.243-5 5v1h2z"></path></svg>`;
-            deleteButton.onclick = () => deleteContact(index);
+            deleteButton.onclick = () => deleteContact(parseInt(deleteButton.getAttribute("id").slice(13)));
             actionsCell.appendChild(deleteButton);
 
             row.appendChild(actionsCell);
@@ -364,18 +402,35 @@ async function loadContacts() {
             // Add row to table body
             tbody.appendChild(row);
         });
+
+        nloaded += (jsonObject.results || []).length;
+        offset += (jsonObject.results || []).length;
 		console.log("ids at the end of load" + ids[7]);
+
+        // Observe last row for more query if there are more to load
+        if (jsonObject.results != null)
+            myObserver.observe(document.getElementById(`row${nloaded-1}`));
     } catch (error) {
         console.log(`Error fetching contacts: ${error.message}`);
     }
 }
 
+// Lazy loading stuff
+const callback = (entries, observer) => {
+    console.log(entries);                                       // FIXME: Delete
+    if(!entries[0].isIntersecting) return;
+    console.log(document.getElementById(`row${nloaded-1}`));    // FIXME: Delete
+    observer.unobserve(entries[0].target);
+    loadContacts();
+}
+const myObserver = new IntersectionObserver(callback);
+
 // Edit row function to open the modal with contact data
 function editContact(index) {
 	console.log("edit row index: " + index);
 	console.log("edit row array: " + ids);
-    const firstName = document.getElementById(`first_Name${index}`).innerText;
-    const lastName = document.getElementById(`last_Name${index}`).innerText;
+    const firstName = document.getElementById(`firstName${index}`).innerText;
+    const lastName = document.getElementById(`lastName${index}`).innerText;
     const email = document.getElementById(`email${index}`).innerText;
     const phone = document.getElementById(`phone${index}`).innerText;
 
@@ -431,8 +486,8 @@ try {
 xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         // Update the table with new values
-        document.getElementById(`first_Name${index}`).innerText = updatedFirstName.value;
-        document.getElementById(`last_Name${index}`).innerText = updatedLastName.value;
+        document.getElementById(`firstName${index}`).innerText = updatedFirstName.value;
+        document.getElementById(`lastName${index}`).innerText = updatedLastName.value;
         document.getElementById(`email${index}`).innerText = updatedEmail.value;
         document.getElementById(`phone${index}`).innerText = updatedPhone.value;
 
@@ -470,6 +525,7 @@ function deleteContact(index) {
                     // Remove the row from the table
                     document.getElementById(`row${index}`).remove();
                     console.log('Contact successfully deleted');
+                    offset--;
                 } else {
                     alert('Failed to delete contact: ' + response.error);
                 }
