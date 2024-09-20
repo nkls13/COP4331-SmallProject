@@ -60,6 +60,33 @@ function doLogin()
 	}
 }
 
+function passwordStrength(password){
+    //uppercase
+    if(!/[A-Z]/.test(password)){
+        return 0;
+    }
+    //lowercase
+    if(!/[a-z]/.test(password)){
+        return 0;
+    }
+    //number
+    if(!/\d/.test(password)){
+        return 0;
+    }
+    //length
+    if(password.length < 8){
+        return 0;
+    }
+    return 1;
+}
+
+function passwordTips(labelId){
+    let label = document.getElementById(labelId);
+    if (!label.querySelector('.errorMessage')) {
+        label.innerHTML += ' <span class="errorMessage" style="color: red;">Must be longer than 7 characters and contain at least one: Uppercase Letter, Lowercase Letter, Number</span>';
+    }
+}
+
 function createAccount()
 {
 	userId = 0;
@@ -94,6 +121,18 @@ function createAccount()
     } else {
         removeError(password, "passwordRegLabel");
     }
+
+    if(passwordStrength(password.value) == 0){
+        errorReg = 1;
+        showError(password, "passwordRegLabel"); 
+        passwordTips("passwordRegLabel")    
+    } else {
+        removeError(password, "passwordRegLabel");
+        removePasswordTips("passwordRegLabel")
+    }
+    
+    
+
     //if at least one field has an error, return so user can correct input
     if(errorReg){
         return;
@@ -229,6 +268,7 @@ function showTable() {
         contacts.style.display = "block";
     }
 }
+
 
 function addContact() {
 
@@ -572,6 +612,15 @@ function showError(inputElement, labelId) {
     let label = document.getElementById(labelId);
     if (!label.querySelector('.error-asterisk')) {
         label.innerHTML += ' <span class="error-asterisk" style="color: red;">*</span>';
+    }
+}
+
+function removePasswordTips(labelId) {
+    let label = document.getElementById(labelId);
+    let tips = label.querySelector('.errorMessage');
+    if (tips) {
+        //removes the password help
+        tips.remove(); 
     }
 }
 
