@@ -360,7 +360,7 @@ async function loadContacts(reset = false) {
 
             // Last name cell
             const lastNameCell = document.createElement("td");
-            lastNameCell.setAttribute("id", `last_Name${nloaded+index}`);
+            lastNameCell.setAttribute("id", `lastName${nloaded+index}`);
             lastNameCell.innerHTML = `<span>${result.lastName}</span>`;
             row.appendChild(lastNameCell);
 
@@ -385,15 +385,16 @@ async function loadContacts(reset = false) {
             editButton.setAttribute("id", `edit_button${nloaded+index}`);
             editButton.classList.add("custom-button", 'edit-button');
             editButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>`;
-            editButton.onclick = () => editContact(nloaded+index);
+            editButton.onclick = () => editContact(parseInt(editButton.getAttribute("id").slice(11)));
             actionsCell.appendChild(editButton);
 
             // Delete button
             const deleteButton = document.createElement("button");
             deleteButton.setAttribute("type", "button");
+            deleteButton.setAttribute("id", `delete_button${nloaded+index}`);
             deleteButton.classList.add("custom-button", 'delete-button');
             deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M14 11h8v2h-8zM4.5 8.552c0 1.995 1.505 3.5 3.5 3.5s3.5-1.505 3.5-3.5-1.505-3.5-3.5-3.5-3.5 1.505-3.5 3.5zM4 19h10v-1c0-2.757-2.243-5-5-5H7c-2.757 0-5 2.243-5 5v1h2z"></path></svg>`;
-            deleteButton.onclick = () => deleteContact(nloaded - 1);
+            deleteButton.onclick = () => deleteContact(parseInt(deleteButton.getAttribute("id").slice(13)));
             actionsCell.appendChild(deleteButton);
 
             row.appendChild(actionsCell);
@@ -428,8 +429,8 @@ const myObserver = new IntersectionObserver(callback);
 function editContact(index) {
 	console.log("edit row index: " + index);
 	console.log("edit row array: " + ids);
-    const firstName = document.getElementById(`first_Name${index}`).innerText;
-    const lastName = document.getElementById(`last_Name${index}`).innerText;
+    const firstName = document.getElementById(`firstName${index}`).innerText;
+    const lastName = document.getElementById(`lastName${index}`).innerText;
     const email = document.getElementById(`email${index}`).innerText;
     const phone = document.getElementById(`phone${index}`).innerText;
 
@@ -485,8 +486,8 @@ try {
 xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         // Update the table with new values
-        document.getElementById(`first_Name${index}`).innerText = updatedFirstName.value;
-        document.getElementById(`last_Name${index}`).innerText = updatedLastName.value;
+        document.getElementById(`firstName${index}`).innerText = updatedFirstName.value;
+        document.getElementById(`lastName${index}`).innerText = updatedLastName.value;
         document.getElementById(`email${index}`).innerText = updatedEmail.value;
         document.getElementById(`phone${index}`).innerText = updatedPhone.value;
 
@@ -524,6 +525,7 @@ function deleteContact(index) {
                     // Remove the row from the table
                     document.getElementById(`row${index}`).remove();
                     console.log('Contact successfully deleted');
+                    offset--;
                 } else {
                     alert('Failed to delete contact: ' + response.error);
                 }
