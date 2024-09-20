@@ -27,6 +27,21 @@
             position: relative;
         }
 
+        /*Password reqs empty*/
+    .bubble {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 10px;
+        border-radius: 50%;
+        background-color: lightgray;
+    }
+
+/*Password reqs filled*/
+    .bubble.filled {
+        background-color: green;
+    }
+
         /* Main container for the login box */
         #loginDiv, #registerPage {
             background: rgba(255, 255, 255, 0.9);
@@ -240,6 +255,15 @@
 				<label id="usernameRegLabel" for="Username">Username:</label>
 				<input type="text" id="Username" placeholder="Username" required>
 			</div>
+
+            <ul id="passwordRequirements" style="list-style-type:none; padding-left: 0;">
+                <li id="lengthReq"><span class="bubble"></span> At least 8 characters</li>
+                <li id="upperReq"><span class="bubble"></span> At least one uppercase letter</li>
+                <li id="lowerReq"><span class="bubble"></span> At least one lowercase letter</li>
+                <li id="numberReq"><span class="bubble"></span> At least one number</li>
+                <li id="specialReq"><span class="bubble"></span> At least one special character</li>
+            </ul>
+
 			<div id="login-input">
 				<label id="passwordRegLabel" for="Password">Password:</label>
 				<input type="password" id ="Password"  placeholder="Password" required>

@@ -8,6 +8,7 @@ let ids = [];
 let nloaded = 0;
 let offset = 0;
 
+
 function doLogin()
 {
     userId = 0;
@@ -61,6 +62,8 @@ function doLogin()
 }
 
 function passwordStrength(password){
+    //regex to store special characters
+    let special = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
     //uppercase
     if(!/[A-Z]/.test(password)){
         return 0;
@@ -77,13 +80,16 @@ function passwordStrength(password){
     if(password.length < 8){
         return 0;
     }
+    if(!special.test(password)){
+        return 0;
+    }
     return 1;
 }
 
 function passwordTips(labelId){
     let label = document.getElementById(labelId);
     if (!label.querySelector('.errorMessage')) {
-        label.innerHTML += ' <span class="errorMessage" style="color: red;">Must be longer than 7 characters and contain at least one: Uppercase Letter, Lowercase Letter, Number</span>';
+        label.innerHTML += ' <span class="errorMessage" style="color: red;">Must fit requirements above</span>';
     }
 }
 
@@ -755,3 +761,32 @@ document.addEventListener('DOMContentLoaded', function() {
     if (phoneText) formatPhoneNumber(phoneText); 
     if (editPhoneText) formatPhoneNumber(editPhoneText);
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    //handle password reqs as each letter is typed
+    document.getElementById('Password').addEventListener('input', function() {
+        let password = this.value;
+
+        //update each requirement based on password input
+        updateRequirement(password.length >= 8, 'lengthReq');
+        updateRequirement(/[A-Z]/.test(password), 'upperReq');
+        updateRequirement(/[a-z]/.test(password), 'lowerReq');
+        updateRequirement(/\d/.test(password), 'numberReq');
+        updateRequirement(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password), 'specialReq');
+    });
+});
+
+function updateRequirement(fitsReq, elementId) {
+    let requirement = document.getElementById(elementId);
+    let bubble = requirement.querySelector('.bubble');
+
+    if (fitsReq) {
+        //make the bubble green
+        bubble.classList.add('filled'); 
+    } else {
+        //make the bubble grey
+        bubble.classList.remove('filled');  
+    }
+}
