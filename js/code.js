@@ -93,6 +93,13 @@ function passwordTips(labelId){
     }
 }
 
+function passwordConfirmTips(labelId){
+    let label = document.getElementById(labelId);
+    if (!label.querySelector('.errorMessage')) {
+        label.innerHTML += ' <span class="errorMessage" style="color: red;">Passwords must match</span>';
+    }
+}
+
 function createAccount()
 {
 	userId = 0;
@@ -102,6 +109,9 @@ function createAccount()
 	let lastName = document.getElementById("lastName");
 	let login = document.getElementById("Username");
 	let password = document.getElementById("Password");
+    let passwordConfirm = document.getElementById("PasswordConfirm")
+
+   
 
     if(!firstName.value.trim()){
         errorReg = true;
@@ -131,14 +141,22 @@ function createAccount()
     if(passwordStrength(password.value) == 0){
         errorReg = 1;
         showError(password, "passwordRegLabel"); 
-        passwordTips("passwordRegLabel")    
+        passwordTips("passwordRegLabel");   
     } else {
         removeError(password, "passwordRegLabel");
-        removePasswordTips("passwordRegLabel")
+        removePasswordTips("passwordRegLabel");
+    }
+
+    if(passwordConfirm.value != password.value){
+        errorReg = true;
+        showError(passwordConfirm, "passwordRegLabelConfirm")
+        passwordConfirmTips("passwordRegLabelConfirm")
+    }
+    else {
+        removeError(passwordConfirm, "passwordRegLabelConfirm")
+        removePasswordConfirm("passwordRegLabelConfirm");
     }
     
-    
-
     //if at least one field has an error, return so user can correct input
     if(errorReg){
         return;
@@ -622,6 +640,15 @@ function showError(inputElement, labelId) {
 }
 
 function removePasswordTips(labelId) {
+    let label = document.getElementById(labelId);
+    let tips = label.querySelector('.errorMessage');
+    if (tips) {
+        //removes the password help
+        tips.remove(); 
+    }
+}
+
+function removePasswordConfirm(labelId) {
     let label = document.getElementById(labelId);
     let tips = label.querySelector('.errorMessage');
     if (tips) {
