@@ -25,7 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	else
 	{   
         // Like searches for Partial Matches
-		$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR CONCAT(FirstName, ' ', LastName) LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND UserId=? LIMIT ? OFFSET ?");
+		$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email, Favorites FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR CONCAT(FirstName, ' ', LastName) LIKE ? OR Phone LIKE ? OR Email LIKE ?)
+		AND UserId=? ORDER BY Favorites DESC LIMIT ? OFFSET ?");
 		
         // The % allows for different characters before or after the search term
 		$searchTerm = "%" . $inData["search"] . "%";
@@ -46,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 				"firstName" => $row["FirstName"],
 				"lastName" => $row["LastName"],
 				"phone" => $row["Phone"],
-				"email" => $row["Email"]
+				"email" => $row["Email"],
+				"favorite" => $row["Favorites"]
 			];
 			//Above is later passed in to json encode which converts the entire array into a json string
 			//Below is for manually creating a JSON array of objects.

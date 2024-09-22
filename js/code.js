@@ -412,6 +412,9 @@ async function loadContacts(reset = false) {
 
 			console.log(ids[nloaded+index]);
 
+            // Debugging: log the value of result.favorite
+            //console.log(`Contact ID: ${result.id}, Favorite: ${result.favorite}`);
+
             // Create a new row
             const row = document.createElement("tr");
             row.setAttribute("id", `row${nloaded+index}`);
@@ -443,6 +446,32 @@ async function loadContacts(reset = false) {
             // Action buttons
             const actionsCell = document.createElement("td");
 
+            // favorite button
+            const favoriteButton = document.createElement("button");
+            favoriteButton.setAttribute("type", "button");
+            favoriteButton.setAttribute("id", `favorite_button${nloaded+index}`);
+            favoriteButton.setAttribute("data-favorite", result.favorite);
+            favoriteButton.classList.add("custom-button", 'favorite-button');
+            //vary if 1 or 0
+            if (result.favorite === 1) {
+                favoriteButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 50, 50, 1);">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                    </svg>`;
+            } else  {
+                favoriteButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 0.3);">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                    </svg>`;
+            }
+            
+            
+            //favoriteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 50, 50, 1);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>`;
+
+            favoriteButton.onclick = () => favoriteContact(parseInt(favoriteButton.getAttribute("id").slice(15)), parseInt(favoriteButton.getAttribute("data-favorite")));
+            actionsCell.appendChild(favoriteButton);
+
+
             // Edit button
             const editButton = document.createElement("button");
             editButton.setAttribute("type", "button");
@@ -460,6 +489,7 @@ async function loadContacts(reset = false) {
             deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M14 11h8v2h-8zM4.5 8.552c0 1.995 1.505 3.5 3.5 3.5s3.5-1.505 3.5-3.5-1.505-3.5-3.5-3.5-3.5 1.505-3.5 3.5zM4 19h10v-1c0-2.757-2.243-5-5-5H7c-2.757 0-5 2.243-5 5v1h2z"></path></svg>`;
             deleteButton.onclick = () => deleteContact(parseInt(deleteButton.getAttribute("id").slice(13)));
             actionsCell.appendChild(deleteButton);
+
 
             row.appendChild(actionsCell);
 
@@ -507,6 +537,63 @@ function editContact(index) {
 
     // Show the modal
     document.getElementById("editContactModal").style.display = "block";
+}
+
+function favoriteContact(index, favoriteStatus) {
+    // flip the number passed in because button is clicked
+    const favorite = favoriteStatus === 1 ? 0 : 1;
+
+   
+
+    const firstName = document.getElementById(`firstName${index}`).innerText;
+    const lastName = document.getElementById(`lastName${index}`).innerText;
+    const email = document.getElementById(`email${index}`).innerText;
+    const phone = document.getElementById(`phone${index}`).innerText;
+
+    let tmp = {
+        id: ids[index],
+        firstName: firstName,
+        lastName: lastName,
+        email: email ,
+        phone: phone,
+        userId: userId,
+        favorite: favorite
+    };
+
+    let jsonPayload = JSON.stringify(tmp)
+    let url = urlBase + '/UpdateContact.' + extension;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                console.log("Favorite status updated successfully");
+
+                 // Update the button's appearance based on the new favorite status
+                const favoriteButton = document.getElementById(`favorite_button${index}`);
+                favoriteButton.setAttribute("data-favorite", favorite); // Update data attribute
+                favoriteButton.innerHTML = parseInt(favorite) === 1 
+                    ? `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 50, 50, 1);">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                    </svg>` // Filled heart
+                    : `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 0.3);">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                    </svg>`; // Empty heart        
+                    resetQuery();   
+            } else {
+                console.log("Error updating favorite status: " + this.statusText);
+            }
+        }
+    };
+    try {
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err.message);
+    }
+    
 }
 
 // Save edited contact function
@@ -564,6 +651,7 @@ xhr.send(jsonPayload);
 console.log(err.message);
 }
 }
+
 
 function deleteContact(index) {
     if (!confirm("Are you sure you want to delete this contact?")) return;
