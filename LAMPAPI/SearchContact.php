@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	{   
         // Like searches for Partial Matches
 		$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email, Favorites FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR CONCAT(FirstName, ' ', LastName) LIKE ? OR Phone LIKE ? OR Email LIKE ?)
-		AND UserId=? ORDER BY Favorites DESC LIMIT ? OFFSET ?");
+		AND UserId=? ORDER BY Favorites DESC, ID ASC LIMIT ? OFFSET ?");
 		
         // The % allows for different characters before or after the search term
 		$searchTerm = "%" . $inData["search"] . "%";
