@@ -18,7 +18,7 @@ function doLogin()
 	let login = document.getElementById("UsernameL");
 	let password = document.getElementById("PasswordL");
     //THIS LINE HANDLES HASHING FOR LOGIN
-	var hash = md5( password );
+	var hash = md5( password.value );
 	
 	document.getElementById("loginResult").innerHTML = "";
 
@@ -162,7 +162,7 @@ function createAccount()
         return;
     }
 
- 	var hash = md5( password );
+ 	var hash = md5( password.value );
 	
 	document.getElementById("registerResult").innerHTML = "";
 
