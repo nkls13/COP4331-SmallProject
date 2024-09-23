@@ -353,11 +353,20 @@
     }
 
     function openModal() {
+        clearModal();
         document.getElementById("contactModal").style.display = "block";
     }
 
     function closeModal() {
         document.getElementById("contactModal").style.display = "none";
+    }
+
+    function clearModal()
+    {
+        document.getElementById("firstNameText").value = "";
+        document.getElementById("lastNameText").value = "";
+        document.getElementById("emailText").value = "";
+        document.getElementById("phoneText").value = "";
     }
 
     function saveContact() {
