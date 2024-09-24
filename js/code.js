@@ -400,6 +400,9 @@ async function loadContacts(reset = false) {
 
         if (jsonObject.error) {
             console.log(jsonObject.error);
+            if (offset == 0 && searchText === "") {
+                document.getElementById("EmptyContacts").style.display = "block";
+            }
             return;
         }
 
