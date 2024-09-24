@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-
+    if (document.getElementById('Password') == null) return;
     //handle password reqs as each letter is typed
     document.getElementById('Password').addEventListener('input', function() {
         let password = this.value;
