@@ -407,7 +407,7 @@ async function loadContacts(reset = false) {
         const tbody = document.getElementById("tbody");
         if(reset) tbody.innerHTML = "";
 
-        (jsonObject.results || []).forEach((result, index) => {
+        jsonObject.results.forEach((result, index) => {
             ids[nloaded+index] = result.id;
 
 			console.log(ids[nloaded+index]);
@@ -497,8 +497,8 @@ async function loadContacts(reset = false) {
             tbody.appendChild(row);
         });
 
-        nloaded += (jsonObject.results || []).length;
-        offset += (jsonObject.results || []).length;
+        nloaded += jsonObject.results.length;
+        offset += jsonObject.results.length;
 		console.log("ids at the end of load" + ids[7]);
 
         // Observe last row for more query if there are more to load

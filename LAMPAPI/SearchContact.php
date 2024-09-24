@@ -77,14 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 	function sendResultInfoAsJson( $obj )
 	{
 		header('Content-type: application/json');
-		//convert PHP array into a json string.
-		//echo outputsn data from php to web page
-		echo json_encode($obj);
+		echo $obj;
 	}
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+		$retValue = '{"count":0,"results":"[]", "error" : "' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
@@ -96,7 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 					'results' => $searchResults, 
 					'error' => ''
 					];
-		sendResultInfoAsJson( $retValue );
+		//convert PHP array into a json string.
+		//echo outputsn data from php to web page
+		sendResultInfoAsJson( json_encode($retValue) );
 	}
 	
 ?>
