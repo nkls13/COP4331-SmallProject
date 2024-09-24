@@ -341,6 +341,26 @@
     box-shadow: 0 4px 10px rgba(204, 202, 202, 0.1); /* Subtle shadow */
 }
 
+    .EmptyContacts
+    {
+        display: block;
+        background-color: #0000009c;
+        margin-top: 20px;
+        padding: 20px;
+    }
+        .EmptyContacts h1
+        {
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+        }
+        .EmptyContacts h2
+        {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
 
     </style>
 
@@ -411,6 +431,17 @@
 				</table>
 			</div>
 		</div>
+
+        <!--No displayable contacts-->
+        <div id="EmptyContacts" class="EmptyContacts">
+            <h1>
+                You currently have no contacts
+            </h1>
+            <h2>
+                Click the <strong>add contact</strong> button above to create your first contact!
+            </h2>
+            
+        </div>   
     </div>
 
     <!-- Modal for adding new contacts -->

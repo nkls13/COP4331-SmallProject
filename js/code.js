@@ -502,8 +502,14 @@ async function loadContacts(reset = false) {
 		console.log("ids at the end of load" + ids[7]);
 
         // Observe last row for more query if there are more to load
-        if (jsonObject.results != null)
+        if (jsonObject.results != null){
             myObserver.observe(document.getElementById(`row${nloaded-1}`));
+        }
+        if (jsonObject.results.length > 0){
+            document.getElementById("EmptyContacts").style.display = "none";
+        } else {
+            document.getElementById("EmptyContacts").style.display = "block";
+        }
     } catch (error) {
         console.log(`Error fetching contacts: ${error.message}`);
     }
@@ -678,6 +684,9 @@ function deleteContact(index) {
                     document.getElementById(`row${index}`).remove();
                     console.log('Contact successfully deleted');
                     offset--;
+                    if (offset == 0) {
+                        document.getElementById("EmptyContacts").style.display = "block";
+                    }
                 } else {
                     alert('Failed to delete contact: ' + response.error);
                 }
