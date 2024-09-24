@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -206,18 +207,29 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
+    #appTitleLink
+    {
+        text-align: left; 
+        position: absolute; 
+        top: 20px; 
+        right: 100px;
+        background-color: #ffffff;
+        border-radius: 100%;
+        height: 75px;
+        width: 75px;
+    }
+    
     </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <!-- Add title with link to GitHub -->
-        <h1 id="appTitleLink" style="text-align: left; position: absolute; top: 20px; left: 20px;">
-            <a href="https://github.com/nkls13/COP4331-SmallProject" style="color: #ffffff; text-decoration: none;">
-                UCF Contact Manager
-            </a>
-        </h1>
+    <!-- Add title with link to GitHub -->
+    <div id="appTitleLink">
+        <a href="https://github.com/nkls13/COP4331-SmallProject">
+            <img src="https://www.svgrepo.com/show/516640/github.svg" alt="COP4331 GitHub" width="75px" height="75px" >
+        </a>
+    </div>
 
 	<div id="loginDiv">
 		<form action="">
@@ -243,62 +255,62 @@
     <div id="successMessage" style="display:none; color: rgb(0, 0, 0); font-weight: bold;">User successfully registered.</div>
 
 
-<!-- SignUp Box -->
-<div id="registerPage" class="popper">
-    <div class="popup-content">
-        <!-- Close Button -->
-        <span id="closeButton" class="close" onclick="hideRegister()">&times;</span>
-        <h2>Register</h2>
-        <form action="">
-			<!--Filled out to SignUp to our application-->
-			<div id="login-input">
-				<label id="firstNameRegLabel" for="firstName">First Name:</label>
-				<input type="text" id ="firstName"  placeholder="First Name" required>
-			</div>
-			<div id="login-input">
-				<label id="lastNameRegLabel" for="lastName">Last Name:</label>
-				<input type="text" id ="lastName"  placeholder="Last Name" required>
-			</div>
-			<div id="login-input">
-				<label id="usernameRegLabel" for="Username">Username:</label>
-				<input type="text" id="Username" placeholder="Username" required>
-			</div>
+    <!-- SignUp Box -->
+    <div id="registerPage" class="popper">
+        <div class="popup-content">
+            <!-- Close Button -->
+            <span id="closeButton" class="close" onclick="hideRegister()">&times;</span>
+            <h2>Register</h2>
+            <form action="">
+                <!--Filled out to SignUp to our application-->
+                <div id="login-input">
+                    <label id="firstNameRegLabel" for="firstName">First Name:</label>
+                    <input type="text" id ="firstName"  placeholder="First Name" required>
+                </div>
+                <div id="login-input">
+                    <label id="lastNameRegLabel" for="lastName">Last Name:</label>
+                    <input type="text" id ="lastName"  placeholder="Last Name" required>
+                </div>
+                <div id="login-input">
+                    <label id="usernameRegLabel" for="Username">Username:</label>
+                    <input type="text" id="Username" placeholder="Username" required>
+                </div>
 
-            <ul id="passwordRequirements" style="list-style-type:none; padding-left: 0;">
-                <li id="lengthReq"><span class="bubble"></span> At least 8 characters</li>
-                <li id="upperReq"><span class="bubble"></span> At least one uppercase letter</li>
-                <li id="lowerReq"><span class="bubble"></span> At least one lowercase letter</li>
-                <li id="numberReq"><span class="bubble"></span> At least one number</li>
-                <li id="specialReq"><span class="bubble"></span> At least one special character</li>
-            </ul>
+                <ul id="passwordRequirements" style="list-style-type:none; padding-left: 0;">
+                    <li id="lengthReq"><span class="bubble"></span> At least 8 characters</li>
+                    <li id="upperReq"><span class="bubble"></span> At least one uppercase letter</li>
+                    <li id="lowerReq"><span class="bubble"></span> At least one lowercase letter</li>
+                    <li id="numberReq"><span class="bubble"></span> At least one number</li>
+                    <li id="specialReq"><span class="bubble"></span> At least one special character</li>
+                </ul>
 
-			<div id="login-input">
-				<label id="passwordRegLabel" for="Password">Password:</label>
-				<input type="password" id ="Password"  placeholder="Password" required>
-			</div>
+                <div id="login-input">
+                    <label id="passwordRegLabel" for="Password">Password:</label>
+                    <input type="password" id ="Password"  placeholder="Password" required>
+                </div>
 
-            <div id="login-input">
-				<label id="passwordRegLabelConfirm" for="PasswordConfirm">Confirm Password:</label>
-				<input type="password" id ="PasswordConfirm"  placeholder="Password" required>
-			</div>
-		        <!-- Register Button -->
-			<button type="button" class="buttons" onclick="createAccount();"> Sign Up </button>
-			<span class="text" id="registerResult"></span>
-		</form>
+                <div id="login-input">
+                    <label id="passwordRegLabelConfirm" for="PasswordConfirm">Confirm Password:</label>
+                    <input type="password" id ="PasswordConfirm"  placeholder="Password" required>
+                </div>
+                    <!-- Register Button -->
+                <button type="button" class="buttons" onclick="createAccount();"> Sign Up </button>
+                <span class="text" id="registerResult"></span>
+            </form>
+        </div>
     </div>
-</div>
 
 
-<script>
-    function showRegister() {
-        document.getElementById("loginDiv").style.display = "none"; // Hide the login form
-        document.getElementById("registerPage").style.display = "block"; // Show the register form
-    }
-    function hideRegister() {
-        document.getElementById("loginDiv").style.display = "block"; // Show the login form
-        document.getElementById("registerPage").style.display = "none"; // Hide the register form
-    }
-</script>
+    <script>
+        function showRegister() {
+            document.getElementById("loginDiv").style.display = "none"; // Hide the login form
+            document.getElementById("registerPage").style.display = "block"; // Show the register form
+        }
+        function hideRegister() {
+            document.getElementById("loginDiv").style.display = "block"; // Show the login form
+            document.getElementById("registerPage").style.display = "none"; // Hide the register form
+        }
+    </script>
 
 </body>
 </html>
