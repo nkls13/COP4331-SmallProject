@@ -164,6 +164,8 @@
 		.input-container {
         position: relative;
         width: 100%;
+        display: flex;
+        align-items: center;
     }
 
 		/* Style the input with padding to make space for the icon */
@@ -176,6 +178,13 @@
 			border: 1px solid #ccc;
 			outline: none;
 		}
+
+        .input-container img {
+            position: absolute;
+            right: 10px;
+            height: 25px;
+            cursor: pointer;
+        }
 
 		/* Adding the icon inside the input field as a background image */
 		#UsernameL {
@@ -241,6 +250,7 @@
 			</div>
 			<div class="input-container">
 				<input type="password" id="PasswordL" placeholder="Password" required>
+                <img src="https://www.svgrepo.com/show/505372/eye-closed.svg" alt="Show Password" id="eyeCon">
 			</div>
 			<!-- Login Button -->
 			<button type="button" class="buttons" onclick="doLogin();">Login</button>
@@ -286,12 +296,18 @@
 
                 <div id="login-input">
                     <label id="passwordRegLabel" for="Password">Password:</label>
-                    <input type="password" id ="Password"  placeholder="Password" required>
+                    <div id="RegPass">    
+                        <input type="password" id ="Password"  placeholder="Password" required>
+                        <img src="https://www.svgrepo.com/show/505372/eye-closed.svg" alt="Show Password" id="eyeConR" width="50px">
+                    </div>
                 </div>
 
                 <div id="login-input">
                     <label id="passwordRegLabelConfirm" for="PasswordConfirm">Confirm Password:</label>
-                    <input type="password" id ="PasswordConfirm"  placeholder="Password" required>
+                    <div id="RegPass">
+                        <input type="password" id ="PasswordConfirm"  placeholder="Password" required>
+                        <img src="https://www.svgrepo.com/show/505372/eye-closed.svg" alt="Show Password" id="eyeConRC" width="50px">
+                    </div>
                 </div>
                     <!-- Register Button -->
                 <button type="button" class="buttons" onclick="createAccount();"> Sign Up </button>
@@ -300,6 +316,28 @@
         </div>
     </div>
 
+    <style>
+        #registerResult {
+            padding-top: 10px;
+            text-align: center;
+        }
+        #PasswordConfirm, #Password, #Username, #firstName, #lastName{
+            width: 100%;
+        }
+        #RegPass{
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        #RegPass img {
+            position: absolute;
+            right: 0px;
+            height: 25px;
+            cursor: pointer;
+        }
+    </style>
 
     <script>
         function showRegister() {
@@ -310,6 +348,42 @@
             document.getElementById("loginDiv").style.display = "block"; // Show the login form
             document.getElementById("registerPage").style.display = "none"; // Hide the register form
         }
+
+        document.getElementById("eyeCon").onclick = function() {
+            let passwordInput = document.getElementById("PasswordL"); 
+            let eyeCon = document.getElementById("eyeCon");           
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeCon.src = "https://www.svgrepo.com/show/505373/eye-open.svg";
+            } else {
+                passwordInput.type = "password";
+                eyeCon.src = "https://www.svgrepo.com/show/505879/eye-closed.svg";
+            }
+        };
+
+        document.getElementById("eyeConR").onclick = function() {
+            let passwordInput = document.getElementById("Password"); 
+            let eyeCon = document.getElementById("eyeConR");           
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeCon.src = "https://www.svgrepo.com/show/505373/eye-open.svg";
+            } else {
+                passwordInput.type = "password";
+                eyeCon.src = "https://www.svgrepo.com/show/505879/eye-closed.svg";
+            }
+        };
+
+        document.getElementById("eyeConRC").onclick = function() {
+            let passwordInput = document.getElementById("PasswordConfirm"); 
+            let eyeCon = document.getElementById("eyeConRC");           
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeCon.src = "https://www.svgrepo.com/show/505373/eye-open.svg";
+            } else {
+                passwordInput.type = "password";
+                eyeCon.src = "https://www.svgrepo.com/show/505879/eye-closed.svg";
+            }
+        };
     </script>
 
 </body>
