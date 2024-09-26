@@ -429,8 +429,6 @@ async function loadContacts(reset = false) {
         jsonObject.results.forEach((result, index) => {
             ids[nloaded+index] = result.id;
 
-			console.log(ids[nloaded+index]);
-
             // Debugging: log the value of result.favorite
             //console.log(`Contact ID: ${result.id}, Favorite: ${result.favorite}`);
 
@@ -518,7 +516,6 @@ async function loadContacts(reset = false) {
 
         nloaded += jsonObject.results.length;
         offset += jsonObject.results.length;
-		console.log("ids at the end of load" + ids[7]);
 
         // Observe last row for more query if there are more to load
         if (jsonObject.results != null){
@@ -536,9 +533,7 @@ async function loadContacts(reset = false) {
 
 // Lazy loading stuff
 const callback = (entries, observer) => {
-    console.log(entries);                                       // FIXME: Delete
     if(!entries[0].isIntersecting) return;
-    console.log(document.getElementById(`row${nloaded-1}`));    // FIXME: Delete
     observer.unobserve(entries[0].target);
     loadContacts();
 }
@@ -684,8 +679,7 @@ function deleteContact(index) {
     const contactId = ids[index];  // Retrieve contact ID from the ids array
     console.log("delete row " + contactId);
 
-    // Send contactId as an array, even if it's just one ID
-    let data = { ids: [contactId], userId: userId }; 
+    let data = { id: contactId, userId: userId }; 
 
     let jsonPayload = JSON.stringify(data);
     let url = urlBase + '/DeleteContact.' + extension;

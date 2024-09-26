@@ -13,21 +13,10 @@
 	}
 	else
 	{   
-		if ($inData["deleteAll"] == true)
-		{
-			$stmt = $conn->prepare("DELETE FROM Contacts WHERE UserID=?");
-            $stmt->bind_param("i", $inData["userId"]);
-		    $stmt->execute();
-		}
-		else
-		{
-			foreach($inData["ids"] as $id)
-			{
-				$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=? AND UserID=?");
-				$stmt->bind_param("ii", $id, $inData["userId"]);
-				$stmt->execute();
-			}
-		}
+		$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=? AND UserID=?");
+		$stmt->bind_param("ii", $inData["id"], $inData["userId"]);
+		$stmt->execute();
+
         returnWithError("");
 
 		$stmt->close();
