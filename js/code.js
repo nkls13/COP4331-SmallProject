@@ -272,6 +272,15 @@ function updateWelcomeTitle() {
     }
 }
 
+function updateSearch() {
+    // Get the search element
+    const searchElement = document.getElementById("searchText").value;
+
+    if (searchElement) {
+        document.getElementById("EmptyH1").textContent = `No Contacts Found With "${searchElement}"`;
+    }
+}
+
 function doLogout()
 {
 	userId = 0;
@@ -398,10 +407,17 @@ async function loadContacts(reset = false) {
 
         const jsonObject = await response.json();
 
+        document.getElementById("EmptySearch").style.display = "none";
+
         if (jsonObject.error) {
             console.log(jsonObject.error);
             if (offset == 0 && searchText === "") {
                 document.getElementById("EmptyContacts").style.display = "block";
+                document.getElementById("EmptySearch").style.display = "none";
+            } else if (offset == 0 && searchText.length > 0) {
+                document.getElementById("EmptyContacts").style.display = "none";
+                updateSearch();
+                document.getElementById("EmptySearch").style.display = "block";
             }
             return;
         }
@@ -687,8 +703,13 @@ function deleteContact(index) {
                     document.getElementById(`row${index}`).remove();
                     console.log('Contact successfully deleted');
                     offset--;
-                    if (offset == 0) {
+                    const searchText = document.getElementById("searchText").value;
+                    if (offset == 0 && searchText === "") {
                         document.getElementById("EmptyContacts").style.display = "block";
+                    } else if (offset == 0 && searchText.length > 0) {
+                        document.getElementById("EmptyContacts").style.display = "none";
+                        updateSearch();
+                        document.getElementById("EmptySearch").style.display = "block";
                     }
                 } else {
                     alert('Failed to delete contact: ' + response.error);

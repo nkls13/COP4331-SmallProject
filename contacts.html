@@ -361,7 +361,26 @@
             font-weight: bold;
         }
 
-
+    .EmptySearch
+    {
+        display: none;
+        background-color: #0000009c;
+        margin-top: 20px;
+        padding: 20px;
+    }
+        .EmptySearch h1
+        {
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+        }
+        .EmptySearch h2
+        {
+            color: rgb(255, 255, 255);
+            font-size: 20px;
+            font-weight: bold;
+        }
+    
     </style>
 
 <script type="text/javascript" src="js/code.js"></script> <!-- This script contains your main functionality -->
@@ -440,8 +459,16 @@
             <h2>
                 Click the <strong>add contact</strong> button above to create your first contact!
             </h2>
-            
         </div>   
+
+        <div id="EmptySearch" class="EmptySearch">
+            <h1 id="EmptyH1">
+                No Contacts Found
+            </h1>
+            <h2>
+                Please check details, or click the <strong>add contact</strong> button to add them
+            </h2>
+        </div>
     </div>
 
     <!-- Modal for adding new contacts -->
